@@ -1,2 +1,5 @@
 # SQL-Index-Project
-This project take VTI index price history, uploads to SQL, and then creates visuals with R (Work in progress)
+This project will take VTI and SPY index price history
+  -upload to a postgres server with pgadmin
+  -calculate a returns for each index daily
+  -create visuals with R (Work in progress)
