@@ -1,0 +1,68 @@
+/*create a table for vti index price data*/
+
+CREATE TABLE vti_test
+    (
+  date_day DATE,
+  open_price FLOAT,
+  adj_close FLOAT
+    );
+
+COPY FROM vti_test(date_day, open_price, adj_close)
+FROM '[Your file path]'
+DELIMITER ','
+CSV HEADER;
+__________
+/*create a table for spy index price data*/
+
+CREATE TABLE spy_test
+    (
+  date_day DATE,
+  open_price FLOAT,
+  adj_close FLOAT
+    );
+
+COPY spy_test(date_day, open_price, adj_close)
+FROM '[Your file path]'
+DELIMITER ','
+CSV HEADER;
+_________
+/*add a returns column to each table*/
+
+ALTER TABLE vti_test
+ADD "returns"
+UPDATE vti_test
+SET returns = ((vti_test.adj_close - vti_test.open)/vti_test.adj_close * 100);
+
+ALTER TABLE spy_test
+ADD "returns"
+UPDATE spy_test
+SET returns = ((spy_test.adj_close - spy_test.open)/spy_test.adj_close * 100);
+_________
+/*add a columns with ticker symbols to each table*/
+
+ALTER TABLE vti_test
+ADD "symbol";
+
+UPDATE vti_test
+SET symbol = "VTI";
+
+ALTER TABLE spy_test
+ADD "symbol";
+
+UPDATE spy_test
+SET symbol = "SPY";
+___________
+/*create final table as long data merging vti and spy for export to R*/
+
+CREATE TABLE vti_spy AS (
+SELECT * from vti_test
+UNION ALL
+SELECT *  from spy_test
+);
+
+COPY vti_spy TO '[Your file path]';
+
+------To Come-------
+--import new table to RStudio
+--create chart with gg plot of monthly and daily 
+
